@@ -12,20 +12,20 @@ export class PomodoroView {
       return;
     }
 
-    this.renderInitialUI();
+    this.renderInitialUI(); // Chamada corrigida, sem argumento
 
     // 1. A View se inscreve no ViewModel como um Observador
     this.viewModel.addObserver(this.updateUI.bind(this));
-
-    // 2. Conecta eventos dos botões e setas
-    this._attachEventListeners();
   }
 
   /**
    * Renderiza o esqueleto inicial do Pomodoro no DOM.
+   * O código está limpo, sem classes de marca d'água de fundo.
    */
   renderInitialUI() {
     this.container.innerHTML = `
+        <div class="relative w-full h-full p-4"> 
+            
             <div id="pomodoro-modes" class="flex justify-center space-x-4 mb-8">
                 <button data-mode="work" class="mode-btn px-6 py-3 text-lg font-semibold rounded-full transition-colors duration-200 shadow-md w-36">Trabalho</button>
                 <button data-mode="shortBreak" class="mode-btn px-6 py-3 text-lg font-semibold rounded-full transition-colors duration-200 shadow-md w-36">Pausa</button>
@@ -60,7 +60,11 @@ export class PomodoroView {
                     Pomodoros Concluídos: <span id="completed-count" class="font-bold text-lg">0</span>
                 </p>
             </div>
-        `;
+        </div> `;
+
+    // O attachEventListeners deve ser chamado aqui, após o innerHTML
+    this._attachEventListeners();
+    this.viewModel.notifyObservers(); // Força o primeiro update
   }
 
   /**
