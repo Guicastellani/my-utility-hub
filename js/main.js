@@ -1,24 +1,30 @@
-// js/main.js (REVISADO PARA INCLUIR O CONTROLE DE ABAS E ESTABILIDADE DE BORDA)
+// js/main.js
 
 import { PomodoroView } from "./view/pomodoroView.js";
-// Importaremos as outras Views aqui quando forem criadas
+import { TodoView } from "./view/todoView.js";
+import { GroceryView } from "./view/groceryView.js";
+
+// Variáveis para armazenar as instâncias das Views
+let pomodoroView;
+let todoView;
+let groceryView;
 
 /**
- * Lógica para gerenciar a troca de abas e a navegação da aplicação.
- * * @param {string} tabName - O nome da aba (ex: 'pomodoro', 'todo', 'grocery').
+ * Logic to manage tab switching and application navigation.
+ * * @param {string} tabName - The tab name (e.g., 'pomodoro', 'todo', 'grocery').
  */
 function switchTab(tabName) {
-  // Esconde todos os conteúdos de aba
+  // Hides all tab content
   document.querySelectorAll(".tab-content").forEach((content) => {
     content.classList.add("hidden");
     content.classList.remove("active-tab");
   });
 
-  // 1. Desativa todos os botões (remove a cor e torna a borda transparente)
+  // 1. Deactivates all buttons (removes color and makes border transparent)
   document.querySelectorAll(".tab-button").forEach((button) => {
     button.classList.add("opacity-50", "border-transparent");
     button.classList.remove(
-      "opacity-100", // Garante que a opacidade padrão volte
+      "opacity-100",
       "border-pomodoro",
       "border-todo",
       "border-grocery",
@@ -28,48 +34,54 @@ function switchTab(tabName) {
       "dark:bg-todo/20",
       "bg-grocery/10",
       "dark:bg-grocery/20"
-      // NOTA: A classe "border-4" não é removida nem adicionada, pois está FIXA no HTML
     );
   });
 
-  // Mostra o conteúdo da aba selecionada
+  // Shows the content of the selected tab
   const activeContent = document.getElementById(`${tabName}-tab`);
   if (activeContent) {
     activeContent.classList.remove("hidden");
     activeContent.classList.add("active-tab");
   }
 
-  // 2. Ativa o botão selecionado (remove transparência e adiciona cor)
+  // 2. Activates the selected button (removes transparency and adds color)
   const activeBtn = document.getElementById(`tab-${tabName}`);
   if (activeBtn) {
     activeBtn.classList.remove("opacity-50", "border-transparent");
-    activeBtn.classList.add("opacity-100"); // Ativa opacidade total
+    activeBtn.classList.add("opacity-100");
 
-    // Define a cor da borda e o fundo do botão ativo
+    // Defines the border color and background of the active button
     const color = activeBtn.dataset.tab;
     activeBtn.classList.add(
       `border-${color}`,
       `bg-${color}/10`,
       `dark:bg-${color}/20`
     );
+  }
 
-    // NOTA: A classe "border-4" já está presente no HTML, não precisa ser adicionada aqui.
+  // 3. FORCE REDRAW: Notify the ViewModel to update the list when the tab changes
+  // Isso garante que os dados do localStorage sejam renderizados se a lista não estiver vazia.
+  if (tabName === "todo" && todoView) {
+    todoView.viewModel.notifyObservers();
+  } else if (tabName === "grocery" && groceryView) {
+    groceryView.viewModel.notifyObservers();
   }
 }
 
-// Garante que o DOM esteja completamente carregado antes de inicializar as Views
+// Ensures the DOM is fully loaded before initializing Views
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("Aplicação 3 em 1 (MVVM) carregada!");
+  console.log("3-in-1 Application (MVVM) loaded!");
 
-  // 1. Inicializa o Módulo Pomodoro
-  // O construtor da View se encarrega de criar o Model e o ViewModel
-  new PomodoroView("pomodoro-content");
+  // 1. Initializes the Pomodoro Module and stores the instance
+  pomodoroView = new PomodoroView("pomodoro-content");
 
-  // 2. Inicialização dos Módulos To-Do e Grocery (serão adicionados aqui)
-  // new TodoView('todo-content');
-  // new GroceryView('grocery-content');
+  // 2. Initializes the To-Do List Module and stores the instance
+  todoView = new TodoView("todo-content");
 
-  // 3. Conecta a lógica de clique aos botões de navegação
+  // 3. Initializes the Grocery List Module and stores the instance
+  groceryView = new GroceryView("grocery-content");
+
+  // 4. Connects the click logic to the navigation buttons
   document.querySelectorAll(".tab-button").forEach((button) => {
     button.addEventListener("click", (event) => {
       const tabName = event.currentTarget.dataset.tab;
@@ -77,6 +89,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Inicializa a aba Pomodoro como padrão
+  // Initializes the Pomodoro tab as default
   switchTab("pomodoro");
 });

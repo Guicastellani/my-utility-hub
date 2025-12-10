@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3 em 1: Pomodoro, Tarefas e Compras</title>
+    <title>3 in 1: Pomodoro, Tasks, and Grocery</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
 
     <script>
         tailwind.config = {
             darkMode: 'class',
-            // Adicionando cores personalizadas para melhor visual
+            // Adding custom colors for better visual
             theme: {
                 extend: {
                     colors: {
@@ -32,20 +32,20 @@
     <div id="app" class="max-w-4xl mx-auto space-y-6">
 
         <h1 class="text-4xl font-extrabold text-center text-gray-800 dark:text-white pt-6">
-            Produtividade 3 em 1
+            3-in-1 Productivity
         </h1>
 
         <div class="flex justify-center space-x-4 mb-8 p-3 rounded-xl bg-white dark:bg-gray-800 shadow-xl">
             <button id="tab-pomodoro" data-tab="pomodoro"
-                class="tab-button w-full py-2 rounded-lg transition-all duration-300 text-lg font-semibold border-4 border-pomodoro text-pomodoro hover:bg-pomodoro/10 dark:hover:bg-pomodoro/20">
+                class="tab-button w-full py-2 rounded-lg transition-all duration-300 text-lg font-semibold border-4 border-transparent text-pomodoro opacity-50 hover:opacity-100 hover:bg-pomodoro/10 dark:hover:bg-pomodoro/20">
                 ⏰ Pomodoro
             </button>
             <button id="tab-todo" data-tab="todo"
-                class="tab-button w-full py-2 rounded-lg transition-all duration-300 text-lg font-semibold border-4 border-transparent text-todo opacity-50 hover:bg-todo/10 dark:hover:bg-todo/20">
+                class="tab-button w-full py-2 rounded-lg transition-all duration-300 text-lg font-semibold border-4 border-transparent text-todo opacity-50 hover:opacity-100 hover:bg-todo/10 dark:hover:bg-todo/20">
                 ✅ To-Do List
             </button>
             <button id="tab-grocery" data-tab="grocery"
-                class="tab-button w-full py-2 rounded-lg transition-all duration-300 text-lg font-semibold border-4 border-transparent text-grocery opacity-50 hover:bg-grocery/10 dark:hover:bg-grocery/20">
+                class="tab-button w-full py-2 rounded-lg transition-all duration-300 text-lg font-semibold border-4 border-transparent text-grocery opacity-50 hover:opacity-100 hover:bg-grocery/10 dark:hover:bg-grocery/20">
                 🛒 Grocery List
             </button>
         </div>
@@ -65,7 +65,7 @@
                 <h2 class="text-3xl font-bold mb-4 text-todo border-b pb-2 border-gray-100 dark:border-gray-700">To-Do
                     List</h2>
                 <div id="todo-content">
-                    <p class="text-gray-500 dark:text-gray-400">A To-Do List será carregada aqui.</p>
+                    <p class="text-gray-500 dark:text-gray-400">The To-Do List will load here.</p>
                 </div>
             </section>
 
@@ -74,7 +74,7 @@
                 <h2 class="text-3xl font-bold mb-4 text-grocery border-b pb-2 border-gray-100 dark:border-gray-700">
                     Grocery List</h2>
                 <div id="grocery-content">
-                    <p class="text-gray-500 dark:text-gray-400">A Grocery List será carregada aqui.</p>
+                    <p class="text-gray-500 dark:text-gray-400">The Grocery List will load here.</p>
                 </div>
             </section>
 

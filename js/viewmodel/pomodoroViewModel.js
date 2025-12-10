@@ -3,36 +3,36 @@
 import { PomodoroModel } from "../model/pomodoroModel.js";
 
 /**
- * # PomodoroViewModel (O ViewModel)
- * * Responsável por:
- * 1. Manter a instância do PomodoroModel.
- * 2. Formatar os dados do Model para a View (ex: segundos para MM:SS).
- * 3. Gerenciar o loop do timer (setInterval).
- * 4. Implementar o padrão Observer para notificar a View sobre mudanças de estado.
+ * # PomodoroViewModel (The ViewModel)
+ * * Responsible for:
+ * 1. Holding the PomodoroModel instance.
+ * 2. Formatting Model data for the View (e.g., seconds to MM:SS).
+ * 3. Managing the timer loop (setInterval).
+ * 4. Implementing the Observer pattern to notify the View about state changes.
  */
 export class PomodoroViewModel {
   constructor() {
     this.model = new PomodoroModel();
-    this.timerId = null; // ID para o setInterval
-    this.observers = []; // Array de funções que serão chamadas quando o estado mudar
+    this.timerId = null; // ID for setInterval
+    this.observers = []; // Array of functions to be called when the state changes
   }
 
   // ----------------------------------------------------
-  // PADRÃO OBSERVER (Para notificar a View)
+  // OBSERVER PATTERN (To notify the View)
   // ----------------------------------------------------
 
   /**
-   * Adiciona uma função de observador (listener), geralmente um método da View.
-   * @param {function} observer - Função a ser chamada quando o estado mudar.
+   * Adds an observer function (listener), usually a View method.
+   * @param {function} observer - Function to be called when the state changes.
    */
   addObserver(observer) {
     this.observers.push(observer);
-    // Garante que a View seja atualizada imediatamente com o estado inicial
+    // Ensures the View is updated immediately with the initial state
     this.notifyObservers();
   }
 
   /**
-   * Notifica todos os observadores sobre a mudança de estado.
+   * Notifies all observers about the state change.
    */
   notifyObservers() {
     const state = this.getStateForView();
@@ -40,19 +40,19 @@ export class PomodoroViewModel {
   }
 
   // ----------------------------------------------------
-  // FORMATANDO DADOS PARA A VIEW
+  // FORMATTING DATA FOR THE VIEW
   // ----------------------------------------------------
 
   /**
-   * Converte o tempo restante em segundos para o formato de string MM:SS.
-   * @param {number} totalSeconds - Tempo restante em segundos.
-   * @returns {string} Tempo formatado.
+   * Converts the remaining time in seconds to the MM:SS string format.
+   * @param {number} totalSeconds - Remaining time in seconds.
+   * @returns {string} Formatted time.
    */
   _formatTime(totalSeconds) {
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
 
-    // Adiciona zero à esquerda se o número for menor que 10
+    // Pads with leading zero if the number is less than 10
     const formattedMinutes = String(minutes).padStart(2, "0");
     const formattedSeconds = String(seconds).padStart(2, "0");
 
@@ -60,8 +60,8 @@ export class PomodoroViewModel {
   }
 
   /**
-   * Agrega e formata todos os dados relevantes do Model para a View.
-   * @returns {object} O estado que a View utilizará para renderizar.
+   * Aggregates and formats all relevant Model data for the View.
+   * @returns {object} The state that the View will use for rendering.
    */
   getStateForView() {
     return {
@@ -69,42 +69,42 @@ export class PomodoroViewModel {
       isRunning: this.model.isRunning,
       currentMode: this.model.currentMode,
       pomodorosCompleted: this.model.pomodorosCompleted,
-      // NOVO: Expor as durações atuais para a View poder atualizar os rótulos dos botões
+      // NEW: Expose current durations so the View can update button labels
       currentDurations: this.model.currentDurations,
     };
   }
 
   // ----------------------------------------------------
-  // MÉTODOS DE AÇÃO (Chamados pela View)
+  // ACTION METHODS (Called by the View)
   // ----------------------------------------------------
 
   /**
-   * Inicia ou pausa o loop principal do timer (setInterval).
+   * Starts or pauses the main timer loop (setInterval).
    */
   toggleTimer() {
     this.model.toggleTimer();
 
     if (this.model.isRunning) {
-      // Se o timer está rodando, iniciamos o loop
+      // If the timer is running, we start the loop
       this.timerId = setInterval(() => {
         const finished = this.model.tick();
-        this.notifyObservers(); // Avisa a View a cada segundo
+        this.notifyObservers(); // Notify the View every second
 
         if (finished) {
-          this.pauseTimerLoop(); // Pausa o loop
-          // O Model já fez a transição e a notificação final já está sendo feita
+          this.pauseTimerLoop(); // Pause the loop
+          // The Model has already handled the transition, and the final notification is being sent
         }
-      }, 1000); // Roda a cada 1000ms (1 segundo)
+      }, 1000); // Runs every 1000ms (1 second)
     } else {
-      // Se o timer foi pausado, paramos o loop
+      // If the timer was paused, we stop the loop
       this.pauseTimerLoop();
     }
 
-    this.notifyObservers(); // Notifica a View sobre a mudança do estado isRunning
+    this.notifyObservers(); // Notify the View about the change in the isRunning state
   }
 
   /**
-   * Para o loop do setInterval.
+   * Stops the setInterval loop.
    */
   pauseTimerLoop() {
     if (this.timerId) {
@@ -114,35 +114,35 @@ export class PomodoroViewModel {
   }
 
   /**
-   * Reseta o timer completamente (para o início do ciclo de Trabalho).
+   * Resets the timer completely (to the beginning of the Work cycle).
    */
   reset() {
-    this.pauseTimerLoop(); // Garante que o loop pare
-    this.model.hardReset(); // Chama o novo método que força o modo 'work'
+    this.pauseTimerLoop(); // Ensures the loop stops
+    this.model.hardReset(); // Calls the new method that forces 'work' mode
     this.notifyObservers();
   }
 
   /**
-   * Altera o modo do timer (Work ou Short Break).
-   * @param {string} mode - O novo modo.
+   * Changes the timer mode (Work or Short Break).
+   * @param {string} mode - The new mode.
    */
   setMode(mode) {
-    this.pauseTimerLoop(); // Pausa antes de mudar o modo
+    this.pauseTimerLoop(); // Pause before changing the mode
     this.model.setMode(mode);
     this.notifyObservers();
   }
 
   /**
-   * Aumenta ou diminui a duração do modo atual em 1 minuto.
-   * Este método é chamado pelas setas da View.
+   * Increases or decreases the duration of the current mode by 1 minute.
+   * This method is called by the arrows in the View.
    */
   adjustTime(delta) {
-    // Só permite ajuste se o timer NÃO estiver rodando.
+    // Only allows adjustment if the timer is NOT running.
     if (!this.model.isRunning) {
       const mode = this.model.currentMode;
       this.model.adjustDuration(mode, delta);
 
-      // Força a View a atualizar o display do tempo e o rótulo do botão
+      // Forces the View to update the time display and button label
       this.notifyObservers();
     }
   }
