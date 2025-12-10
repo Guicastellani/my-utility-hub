@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3 em 1: Pomodoro, Tarefas e Compras</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            // Adicionando cores personalizadas para melhor visual
+            theme: {
+                extend: {
+                    colors: {
+                        'pomodoro': '#4F46E5', // Indigo
+                        'todo': '#0D9488',     // Teal
+                        'grocery': '#F59E0B',  // Amber
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 min-h-screen p-4">
+
+    <div id="app" class="max-w-4xl mx-auto space-y-6">
+
+        <h1 class="text-4xl font-extrabold text-center text-gray-800 dark:text-white pt-6">
+            Produtividade 3 em 1
+        </h1>
+
+        <div class="flex justify-center space-x-4 mb-8 p-3 rounded-xl bg-white dark:bg-gray-800 shadow-xl">
+            <button id="tab-pomodoro" data-tab="pomodoro"
+                class="tab-button w-full py-2 rounded-lg transition-all duration-300 text-lg font-semibold border-4 border-pomodoro text-pomodoro hover:bg-pomodoro/10 dark:hover:bg-pomodoro/20">
+                ⏰ Pomodoro
+            </button>
+            <button id="tab-todo" data-tab="todo"
+                class="tab-button w-full py-2 rounded-lg transition-all duration-300 text-lg font-semibold border-4 border-transparent text-todo opacity-50 hover:opacity-100">
+                ✅ To-Do List
+            </button>
+            <button id="tab-grocery" data-tab="grocery"
+                class="tab-button w-full py-2 rounded-lg transition-all duration-300 text-lg font-semibold border-4 border-transparent text-grocery opacity-50 hover:opacity-100">
+                🛒 Grocery List
+            </button>
+        </div>
+
+        <div id="tab-content-container">
+
+            <section id="pomodoro-tab"
+                class="tab-content active-tab bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-6 border border-gray-200 dark:border-gray-700">
+                <h2 class="text-3xl font-bold mb-4 text-pomodoro border-b pb-2 border-gray-100 dark:border-gray-700">
+                    Pomodoro Timer</h2>
+                <div id="pomodoro-content">
+                </div>
+            </section>
+
+            <section id="todo-tab"
+                class="tab-content hidden bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-6 border border-gray-200 dark:border-gray-700">
+                <h2 class="text-3xl font-bold mb-4 text-todo border-b pb-2 border-gray-100 dark:border-gray-700">To-Do
+                    List</h2>
+                <div id="todo-content">
+                    <p class="text-gray-500 dark:text-gray-400">A To-Do List será carregada aqui.</p>
+                </div>
+            </section>
+
+            <section id="grocery-tab"
+                class="tab-content hidden bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-6 border border-gray-200 dark:border-gray-700">
+                <h2 class="text-3xl font-bold mb-4 text-grocery border-b pb-2 border-gray-100 dark:border-gray-700">
+                    Grocery List</h2>
+                <div id="grocery-content">
+                    <p class="text-gray-500 dark:text-gray-400">A Grocery List será carregada aqui.</p>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script type="module" src="./js/main.js"></script>
+</body>
+
+</html>
