@@ -52,7 +52,7 @@ export class TodoView {
                                 class="p-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-todo-500 focus:border-todo-500 dark:bg-gray-600 dark:text-white"
                                 required
                                 min="${todayDate}"> </div> <button type="submit"
-                            class="bg-todo-600 text-gray-700 font-bold py-2 rounded-lg shadow-md hover:bg-todo-700 transition duration-200">
+                            class="bg-todo-600 text-gray-700 dark:text-gray-100 font-bold py-2 rounded-lg shadow-md hover:bg-todo-700 transition duration-200">
                             + Add New Task
                         </button>
                     </form>

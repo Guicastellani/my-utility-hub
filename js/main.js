@@ -1,5 +1,3 @@
-// js/main.js
-
 import { PomodoroView } from "./view/pomodoroView.js";
 import { TodoView } from "./view/todoView.js";
 import { GroceryView } from "./view/groceryView.js";
@@ -9,9 +7,72 @@ let pomodoroView;
 let todoView;
 let groceryView;
 
+// =========================================================
+// CLASSE PARA GERENCIAMENTO DE TEMA (DARK/LIGHT MODE)
+// =========================================================
+class ThemeManager {
+  constructor() {
+    this.htmlRoot = document.getElementById("html-root");
+    this.toggleButton = document.getElementById("theme-toggle");
+    this.sunIcon = document.getElementById("sun-icon");
+    this.moonIcon = document.getElementById("moon-icon");
+
+    // Carrega o tema salvo do localStorage ou usa 'light' como padrão
+    this.currentTheme = localStorage.getItem("theme") || "light";
+
+    this.initializeTheme();
+
+    if (this.toggleButton) {
+      this.toggleButton.addEventListener("click", () => this.toggleTheme());
+    }
+  }
+
+  /**
+   * Aplica a classe 'dark' ao <html> e atualiza os ícones.
+   */
+  applyTheme() {
+    if (this.currentTheme === "dark") {
+      this.htmlRoot.classList.add("dark");
+
+      this.sunIcon.classList.add("hidden");
+      this.moonIcon.classList.remove("hidden");
+    } else {
+      this.htmlRoot.classList.remove("dark");
+
+      this.sunIcon.classList.remove("hidden");
+      this.moonIcon.classList.add("hidden");
+    }
+    // Salva a preferência do usuário
+    localStorage.setItem("theme", this.currentTheme);
+  }
+
+  /**
+   * Inicializa o tema ao carregar a página.
+   */
+  initializeTheme() {
+    // Se o sistema preferir dark, mas o localStorage estiver vazio,
+    // usa o tema do sistema. Caso contrário, usa o tema salvo.
+    if (
+      !localStorage.getItem("theme") &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+    ) {
+      this.currentTheme = "dark";
+    }
+    this.applyTheme();
+  }
+
+  /**
+   * Alterna entre Light e Dark Mode.
+   */
+  toggleTheme() {
+    this.currentTheme = this.currentTheme === "light" ? "dark" : "light";
+    this.applyTheme();
+  }
+}
+
 /**
  * Logic to manage tab switching and application navigation.
- * * @param {string} tabName - The tab name (e.g., 'pomodoro', 'todo', 'grocery').
+ * @param {string} tabName - The tab name (e.g., 'pomodoro', 'todo', 'grocery').
  */
 function switchTab(tabName) {
   // Hides all tab content
@@ -71,6 +132,9 @@ function switchTab(tabName) {
 // Ensures the DOM is fully loaded before initializing Views
 document.addEventListener("DOMContentLoaded", () => {
   console.log("3-in-1 Application (MVVM) loaded!");
+
+  // 0. Inicializa o ThemeManager para configurar o tema e o botão de toggle
+  new ThemeManager();
 
   // 1. Initializes the Pomodoro Module and stores the instance
   pomodoroView = new PomodoroView("pomodoro-content");

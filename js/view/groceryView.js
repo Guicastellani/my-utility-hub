@@ -39,7 +39,7 @@ export class GroceryView {
                         </div>
                         
                         <button type="submit"
-                            class="bg-grocery-600 text-gray-700 font-bold py-2 rounded-lg shadow-md hover:bg-grocery-700 transition duration-200">
+                            class="bg-grocery-600 text-gray-700 dark:text-gray-100 font-bold py-2 rounded-lg shadow-md hover:bg-grocery-700 transition duration-200">
                             + Add to List
                         </button>
                     </form>
