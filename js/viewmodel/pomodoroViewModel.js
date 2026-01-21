@@ -92,6 +92,7 @@ export class PomodoroViewModel {
 
         if (finished) {
           this.pauseTimerLoop(); // Pause the loop
+          this.playRingbell(); // Play ringbell sound when timer ends
           // The Model has already handled the transition, and the final notification is being sent
         }
       }, 1000); // Runs every 1000ms (1 second)
@@ -144,6 +145,36 @@ export class PomodoroViewModel {
 
       // Forces the View to update the time display and button label
       this.notifyObservers();
+    }
+  }
+
+  /**
+   * Plays a ringbell sound when the timer ends.
+   */
+  playRingbell() {
+    try {
+      const audioContext = new (
+        window.AudioContext || window.webkitAudioContext
+      )();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      oscillator.frequency.setValueAtTime(800, audioContext.currentTime); // 800Hz beep
+      oscillator.type = "sine";
+
+      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime); // Volume
+      gainNode.gain.exponentialRampToValueAtTime(
+        0.01,
+        audioContext.currentTime + 0.5,
+      ); // Fade out
+
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.5); // 0.5 seconds duration
+    } catch (error) {
+      console.warn("Audio playback failed:", error);
     }
   }
 }
